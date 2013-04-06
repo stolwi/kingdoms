@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="kingdoms" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.\SQLEXPRESS;AttachDbFilename=&quot;C:\Users\Will\Documents\Visual Studio 2010\Projects\StrongholdTiming\StrongholdTiming\App_Data\kingdoms.mdf&quot;;Integrated Security=True;User Instance=True" SettingsObjectName="SHKEntity.Properties.Settings" SettingsPropertyName="kingdomsConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Player" Member="Players">
+    <Type Name="Player">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Association Name="Player_Village" Member="Villages" ThisKey="Id" OtherKey="OwnerPlayerId" Type="Village" />
+    </Type>
+  </Table>
+  <Table Name="dbo.World" Member="Worlds">
+    <Type Name="World">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="World_Village" Member="Villages" ThisKey="Id" OtherKey="WorldId" Type="Village" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Village" Member="Villages">
+    <Type Name="Village">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="NVarChar(128)" CanBeNull="true" />
+      <Column Name="PosX" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="PosY" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="OwnerPlayerId" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="Confidence" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="WorldId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Village_Edge" Member="Edges" ThisKey="Id" OtherKey="FromVillageId" Type="Edge" />
+      <Association Name="Village_Edge1" Member="Edges1" ThisKey="Id" OtherKey="ToVillageId" Type="Edge" />
+      <Association Name="Player_Village" Member="Player" ThisKey="OwnerPlayerId" OtherKey="Id" Type="Player" IsForeignKey="true" />
+      <Association Name="World_Village" Member="World" ThisKey="WorldId" OtherKey="Id" Type="World" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Edge" Member="Edges">
+    <Type Name="Edge">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="FromVillageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ToVillageId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Time" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="TimeType" Type="System.String" DbType="NChar(10) NOT NULL" CanBeNull="false" />
+      <Association Name="Village_Edge" Member="Village" ThisKey="FromVillageId" OtherKey="Id" Type="Village" IsForeignKey="true" />
+      <Association Name="Village_Edge1" Member="Village1" ThisKey="ToVillageId" OtherKey="Id" Type="Village" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>

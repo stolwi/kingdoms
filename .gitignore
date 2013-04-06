@@ -1,0 +1,11 @@
+*.dll
+*.exe
+*.zip
+*.log
+*.pdb
+Debug/
+Release/
+bin/
+obj/
+TestResults/
+packages/
