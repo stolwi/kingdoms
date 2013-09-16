@@ -8,63 +8,85 @@ namespace SHKEntity
     public class Kingdom
     {
         private int Id;
-        private List<Village> villages = new List<Village>();
-        private List<Edge> edges = new List<Edge>();
-        private int maxVillageId = 0;
-        private int maxEdgeId = 0;
+        private DataClasses1DataContext db;
 
         public Kingdom(int id)
         {
             Id = id;
+            db = new DataClasses1DataContext();
         }
 
-        public List<Village> Villages { get { return villages; } }
+        public IQueryable<Village> Villages {
+            get 
+            {
+                return db.Villages; 
+            } 
+        }
 
         public Village GetVillage(int id)
         {
-            return villages.Find(x => x.Id == id);
+            var village = from v in db.Villages
+                          where v.Id == id
+                          select v;
+            return village.FirstOrDefault();
+        }
+
+        public Village GetVillageByName(string name)
+        {
+            var village = from v in db.Villages
+                          where v.Name == name
+                          select v;
+            return village.FirstOrDefault();
         }
 
         public int AddVillage(Village v)
         {
             // Right now, only allow unique names
             // TODO expand this to allow same-names, but then figure out how to know when they really are the same.
-            Village existing = villages.Find(x => x.Name.Equals(v.Name));
+            Village existing = GetVillage(v.Id);
+            if (existing == null)
+            {
+                existing = db.Villages.Where(x => x.Name == v.Name).FirstOrDefault();
+            }
 
             if (existing != null)
             {
                 return existing.Id;
             }
-            maxVillageId++;
-            v.Id = maxVillageId;
-            villages.Add(v);
-            return maxVillageId;
+            if (v.WorldId == 0) v.WorldId = 1;
+            db.Villages.InsertOnSubmit(v);
+            db.SubmitChanges();
+            return v.Id;
         }
 
         public int AddEdge(Edge e)
         {
-            if (!villages.Any(x => x.Id == e.FromId))
+            if (db.Edges.Any(x => x.FromVillageId == e.FromVillageId && x.ToVillageId == e.ToVillageId))
             {
-                throw new Exception("Edge.FromId " + e.FromId + " doesn't reference existing village");
+                // For now silently skip adding this duplicate edge
+                return 0;
             }
-            if (!villages.Any(x => x.Id == e.ToId))
+            if (!db.Villages.Any(x => x.Id == e.FromVillageId))
             {
-                throw new Exception("Edge.ToId " + e.ToId + " doesn't reference existing village");
+                throw new Exception("Edge.FromVillageId " + e.FromVillageId + " doesn't reference existing village");
+            }
+            if (!db.Villages.Any(x => x.Id == e.ToVillageId))
+            {
+                throw new Exception("Edge.ToVillageId " + e.ToVillageId + " doesn't reference existing village");
             }
             if (e.Time <= 0)
             {
                 throw new Exception("Edge time is not a positive number");
             }
             // TODO - validate time type
-            maxEdgeId++;
-            e.Id = maxEdgeId;
-            edges.Add(e);
-            return maxEdgeId;
+            db.Edges.InsertOnSubmit(e);
+            db.SubmitChanges();
+            return e.Id;
         }
 
         public bool IsConfidentVillage(int id)
         {
-            Village target = villages.Find(x => x.Id == id);
+            Village target = db.Villages.Where(x => x.Id == id).FirstOrDefault();
             return (target != null && target.Confidence > 29);
         }
 
@@ -82,9 +104,9 @@ namespace SHKEntity
 
         public void FixVillageLocation(int id)
         {
-            Village target = villages.Find(x => x.Id == id);
-            List<Edge> foundEdges = edges.Where(x => (x.FromId == id && IsConfidentVillage(x.ToId)) ||
-                                                     (x.ToId == id && IsConfidentVillage(x.FromId))).ToList();
+            Village target = db.Villages.Where(x => x.Id == id).FirstOrDefault();
+            List<Edge> foundEdges = db.Edges.Where(x => (x.FromVillageId == id && IsConfidentVillage(x.ToVillageId)) ||
+                                                     (x.ToVillageId == id && IsConfidentVillage(x.FromVillageId))).ToList();
 
             if (foundEdges.Count < 3)
             {
@@ -94,8 +116,8 @@ namespace SHKEntity
             var edgesWithConfidences = new List<EdgeVillageConfidence>();
             foreach(Edge e in foundEdges)
             {
-                int otherVillageId = (e.FromId == id) ? e.ToId : e.FromId;
-                Village otherVillage = villages.Find(x => x.Id == otherVillageId);
+                int otherVillageId = (e.FromVillageId == id) ? e.ToVillageId : e.FromVillageId;
+                Village otherVillage = db.Villages.Where(x => x.Id == otherVillageId).FirstOrDefault(); 
                 edgesWithConfidences.Add(new EdgeVillageConfidence(e, otherVillage));
             }
             // Now use most confident 3 villages for the calculation
@@ -110,12 +132,12 @@ namespace SHKEntity
         }
         public double DistanceBetweenVillageIds(int id1, int id2)
         {
-            Village v1 = villages.Find(x => x.Id == id1);
+            Village v1 = db.Villages.Where(x => x.Id == id1).FirstOrDefault();
             if (v1 == null)
             {
                 throw new Exception("Failed to find village with id: " + id1);
             }
-            Village v2 = villages.Find(x => x.Id == id2);
+            Village v2 = db.Villages.Where(x => x.Id == id2).FirstOrDefault();
             if (v2 == null)
             {
                 throw new Exception("Failed to find village with id: " + id2);
@@ -143,5 +165,23 @@ namespace SHKEntity
             return Math.Sqrt(dx * dx + dy * dy);
         }
 
+
+        public void UpdateDB()
+        {
+            db.SubmitChanges();
+        }
+
+        public void RemoveVillage(int id)
+        {
+            Village v = GetVillage(id);
+            RemoveAllEdgesFor(v);
+            db.Villages.DeleteOnSubmit(v);
+            db.SubmitChanges();
+        }
+
+        private void RemoveAllEdgesFor(Village v)
+        {
+            db.Edges.DeleteAllOnSubmit(db.Edges.Where(x => (x.FromVillageId == v.Id || x.ToVillageId == v.Id)));
+        }
     }
 }

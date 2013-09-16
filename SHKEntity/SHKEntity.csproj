@@ -46,6 +46,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DataClasses1.dbml</DependentUpon>
     </Compile>
+    <Compile Include="DataClassesPartials.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Kingdom.cs" />
     <Compile Include="MathLogic.cs" />
@@ -58,7 +59,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Universe.cs" />
-    <Compile Include="Village.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

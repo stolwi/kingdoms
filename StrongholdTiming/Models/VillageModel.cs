@@ -8,31 +8,29 @@ namespace StrongholdTiming.Models
 {
     public class VillageModel
     {
-        public int Id { get; set;  }
-        public string Name { get; set; }
+        public int id { get; set;  }
+        public string name { get; set; }
         //public string Owner { get; set; }
-        public string Parish { get; set; }
-        public double X { get; set; }
-        public double Y { get; set; }
+        public string parish { get; set; }
+        public double x { get; set; }
+        public double y { get; set; }
 
         public VillageModel() { }
 
         public VillageModel(Village v)
         {
-            Id = v.Id;
-            Name = v.Name;
+            id = v.Id;
+            name = v.Name;
             //Owner = v.OwnerId;
-            Parish = v.Parish;
-            X = v.Position.X;
-            Y = v.Position.Y;
+            x = v.Position.X;
+            y = v.Position.Y;
         }
 
         internal Village GetEntity()
         {
-            Village v = new Village(Name, Parish, 0);
-            v.Id = Id;
-            v.Position.X = X;
-            v.Position.Y = Y;
+            Village v = new Village { Name = name, Confidence = 0 };
+            v.Id = id;
+            v.Position = new Location(x, y);
             return v;
         }
     }

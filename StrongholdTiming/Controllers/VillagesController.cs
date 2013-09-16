@@ -33,7 +33,7 @@ namespace StrongholdTiming.Controllers
             Kingdom k = Universe.GetKingdom(DEFAULT_KINGDOM);
             if (v != null)
             {
-                v.Id = k.AddVillage(v.GetEntity());
+                v.id = k.AddVillage(v.GetEntity());
                 return v; 
             }
             else
@@ -53,7 +53,7 @@ namespace StrongholdTiming.Controllers
         public void Delete(int id)
         {
             Kingdom k = Universe.GetKingdom(DEFAULT_KINGDOM);
-            throw new NotImplementedException();
+            k.RemoveVillage(id);
         }
     }
 }

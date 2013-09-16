@@ -10,20 +10,20 @@ namespace StrongholdTiming.Models
     {
         int StartVillageId { get; set; }
         int EndVillageId { get; set; }
-        int DistanceInSeconds { get; set; }
+        double DistanceInSeconds { get; set; }
         string DistanceMeasurementType { get; set; }
 
         public EdgeModel(Edge e)
         {
-            StartVillageId = e.FromId;
-            EndVillageId = e.ToId;
+            StartVillageId = e.FromVillageId;
+            EndVillageId = e.ToVillageId;
             DistanceInSeconds = e.Time;
             DistanceMeasurementType = e.TimeType;
         }
 
         internal Edge GetEntity()
         {
-            return new Edge(StartVillageId, EndVillageId, DistanceInSeconds, DistanceMeasurementType);
+            return new Edge { FromVillageId = StartVillageId, ToVillageId = EndVillageId, Time = DistanceInSeconds, TimeType = DistanceMeasurementType };
         }
     }
 }

@@ -2,19 +2,49 @@
     ViewBag.Title = "Kingdom";
 }
 
-<script type="text/javascript" src="~/scripts/lib/jquery-1.9.1.js"></script>
-<script type="text/javascript" src="~/scripts/map.js"></script>
-
 <h2>Kingdom</h2>
 
-<canvas id="mapCanvas" width="600" height="800" style="border:1px solid #000000;"></canvas><br />
+<canvas id="mapCanvas" width="500" height="500" style="border:1px solid #000000;"></canvas><br />
 
-<a href="no-javascript.html" title="Pan Right" id="panright">Pan Right</a>
-<a href="no-javascript.html" title="Pan Left" id="panleft">Pan Left</a>
-<a href="no-javascript.html" title="Pan Up" id="panup">Pan Up</a>
-<a href="no-javascript.html" title="Pan Down" id="pandown">Pan Down</a>
+<a href="/home/NoJavascript.htm" title="Pan Right" id="panright">Pan Right</a>
+<a href="/home/NoJavascript.htm" title="Pan Left" id="panleft">Pan Left</a>
+<a href="/home/NoJavascript.htm" title="Pan Up" id="panup">Pan Up</a>
+<a href="/home/NoJavascript.htm" title="Pan Down" id="pandown">Pan Down</a>
+<a href="/home/NoJavascript.htm" title="Scale Up" id="scaleup">Scale Up</a>
+<a href="/home/NoJavascript.htm" title="Scale Down" id="scaledown">Scale Down</a>
 
-<a href="no-javascript.html" title="Scale Up" id="scaleup">Scale Up</a>
-<a href="no-javascript.html" title="Scale Down" id="scaledown">Scale Down</a>
+<div ng-app="ngKingdom">
+    <div class="container" ng-controller="VillageController">
+        Number of villages: {{villages.length}}
 
-Number of Villages: <label id="villagecount">0</label>
+        <table>
+        <tbody>
+            <tr>
+                <td><label>Village name</label></td>
+                <td><input type="text" ng-model = "name"/></td>
+                <td><button class="btn btn-success" ng-click="addVillage()">Add</button></td>
+            </tr>
+        </tbody>
+        </table>
+
+        <table>
+        <tbody>
+            <tr ng-repeat="v in villages">
+                <td>{{v.name}}</td>
+                <td>({{v.x}}, {{v.y}})</td>
+                <td> <button class="btn btn-danger" ng-click="removeVillage(v)">Remove</button></td>
+            </tr>
+        </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+<script src="~/scripts/lib/JQuery/jquery-1.9.1.js"></script>
+<script src="~/scripts/lib/underscore.js"></script>
+<script src="~/scripts/lib/Angular/angular.js"></script>
+<script src="~/scripts/lib/Angular/angular-resource.js"></script>
+<script src="~/scripts/VillageController.js"></script>
+<!-- <script src="~/scripts/EdgeController.js"></script> -->
+

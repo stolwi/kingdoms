@@ -40,14 +40,14 @@
         <elementListCompartment Id="2bafa704-4858-4db5-83fa-ca16c46898e4" absoluteBounds="4.265, 3.46, 1.9700000000000002, 1.2108968098958333" name="DataPropertiesCompartment" titleTextColor="Black" itemTextColor="Black" />
       </nestedChildShapes>
     </classShape>
-    <associationConnector edgePoints="[(2.5 : 3.82774983723958); (4.25 : 3.82774983723958)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.5 : 4.13990880330404); (4.25 : 4.13990880330404)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataClasses1DataContext/Village/Village_Edge" />
       <nodes>
         <classShapeMoniker Id="b2d890d7-5c8f-47e1-853a-8c3eda06404e" />
         <classShapeMoniker Id="37d8ec07-265b-49e1-a123-56490b9c764b" />
       </nodes>
     </associationConnector>
-    <associationConnector edgePoints="[(2.5 : 3.35137491861979); (4.25 : 3.35137491861979)]" fixedFrom="Algorithm" fixedTo="Algorithm">
+    <associationConnector edgePoints="[(2.5 : 3.50745440165202); (4.25 : 3.50745440165202)]" fixedFrom="Algorithm" fixedTo="Algorithm">
       <AssociationMoniker Name="/DataClasses1DataContext/Village/Village_Edge1" />
       <nodes>
         <classShapeMoniker Id="b2d890d7-5c8f-47e1-853a-8c3eda06404e" />
